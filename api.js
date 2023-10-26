@@ -3,8 +3,6 @@ const mongoose = require('mongoose');
 const app = express();
 app.use(express.json());
 
-
-
 // Constants.
 const sizePriority = ['Small', 'Medium', 'Large', 'X-Large'];
 
@@ -21,6 +19,7 @@ const ParkingLot = mongoose.model('ParkingLot', parkingLotSchema);
 
 // Ideally should be in config and passwords either in SecretManager or .env variables.
 const mongoDBURI = "mongodb+srv://lazycodernk:Hih8rClIKVMUYQhV@database.di7ncpz.mongodb.net/parking-lot-db?retryWrites=true&w=majority"
+
 // Connect to MongoDB
 mongoose.connect(mongoDBURI, { useNewUrlParser: true });
 const db = mongoose.connection;
@@ -43,6 +42,8 @@ app.post('/onboard-parking-lot', async (req, res, next) => {
     // TODO: validation
     console.log({body: req.body})
 
+    //TODO: make sure parkingLotId is unique. 
+
     const parkingLot = new ParkingLot({
       parkingLotId,
       floors,
@@ -63,7 +64,7 @@ app.post('/allocate-slot/:parkingLotId/:carSize', async (req, res, next) => {
     const { parkingLotId, carSize } = req.params;
 
     console.log({params: req.params })
-    
+
     const validationErrorMessages = {}
     if(!sizePriority.includes(carSize)){
       validationErrorMessages.carSize = `carSize is invalid, received ${carSize}, required one of ${sizePriority}`
